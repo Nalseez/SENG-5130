@@ -1,0 +1,15 @@
+{
+  "name": "event-hub",
+  "version": "1.0.0",
+  "description": "event-hub for listening to PubSub and storing in a DB",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "particle-api-js": "^8.4.0"
+  }
+}
