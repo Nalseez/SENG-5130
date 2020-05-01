@@ -1,9 +1,12 @@
 //Load express module with `require` directive
 var express = require('express')
 var Particle = require('particle-api-js')
+var sleep = require('sleep');
 var particle = new Particle();
-var token;
+var token; // Still more bad practice, don't do this for realzies.
 var app = express()
+var lastReadTime = -1;
+
 
 // Imports the Google Cloud client library
 const {PubSub} = require('@google-cloud/pubsub');
@@ -51,6 +54,15 @@ function listenForMessages() {
     console.log(`Received message ${message.id}:`);
     console.log(`\tData: ${message.data}`);
     console.log(`\tAttributes: ${message.attributes}`);
+
+    // Simulating persistence along with a ephemeral heuristic.
+    // Please don't do this in real code. This is just for a proof-of-concept
+    if(message.data > 2500 && !alreadyWateredInPastMinute()){
+      lastReadTime = new Date().getTime();
+      loginAndPublishEvent('turn-on');      
+      sleep.sleep(4);
+      loginAndPublishEvent('turn-off');
+    }
     messageCount += 1;
 
     // "Ack" (acknowledge receipt of) the message
@@ -92,4 +104,13 @@ function loginAndPublishEvent(eventName){
         console.log("Failed to publish event: " + err);
       }
   );
+}
+
+function alreadyWateredInPastMinute(){
+  var now = new Date.getTime();
+  if(now - lastReadTime < 60000){
+    return true;
+  } else {
+    return false;
+  }
 }

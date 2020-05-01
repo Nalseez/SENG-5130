@@ -1,0 +1,16 @@
+version: '3.6'
+services:
+  event-hub:
+    build: event-hub
+    ports:
+      - "8081:8081"
+  postgresql:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
