@@ -19,8 +19,26 @@ app.listen(8081, function () {
 particle.login({username: 'USERNAME', password: 'PASSWORD'}).then(
   function(data){
     token = data.body.access_token;
+    return token;
   },
   function(err){
     console.log('Could not log in.', err);
   }
+).then(
+  function(result){
+    return particle.publishEvent({ name: 'toggle-water-pump', data: 'turn-off', auth: token});
+  },
+  function(err){
+    console.log('Error when publishing event.', err);
+  }
+).then(
+  function(data){
+    if(data.body.ok){
+      console.log("Event published successfully");
+    }
+  },
+    function(err){
+      console.log("Failed to publish event: " + err);
+    }
 );
+
